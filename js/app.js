@@ -1,78 +1,46 @@
-/*¨ fetch("https://n5n3eiyjb0.execute-api.eu-north-1.amazonaws.com/keys", {
-  method: "POST"
-})
-  .then(response => {
-    if (!response.ok) {
-      throw new Error("HTTP status " + response.status);
-    }
-    return response.json();
-  })
-  .then(data => {
-    console.log(data);
-  })
-  .catch(error => {
-    console.error("Error:", error.message);
-  });
-
-  */
- 
-  async function getApi() {
-    try {
-      const response = await fetch("https://n5n3eiyjb0.execute-api.eu-north-1.amazonaws.com/bodies", {
-        method: "GET",
-        headers: { "x-zocom": "solaris-B2mWxADrthdHqd22" },
-      });
-  
-      const data = await response.json();
-      console.log(data);
-  
-    } catch (error) {
-      console.error("Error:", error.message);
-    }
-  }
-  
- 
-  getApi();
- 
-
-
- // app.js
 // Add interactivity to the planets with API integration
 
 const planets = document.querySelectorAll('.planet');
+const planetInfoElement = document.getElementById('planet-info');
 
 planets.forEach(planet => {
   planet.addEventListener('click', handleClick);
 });
 
-function handleClick(event) {
-  const planet = event.target;
-  const planetId = planet.id;
+async function handleClick(event) {
+  try {
+    const planet = event.target;
+    const planetId = planet.id;
 
-  fetchPlanetInfo(planetId)
-    .then(data => {
-      // Process the returned data
-      console.log(data);
-      const planetName = data.name;
-      const latinName = data.latinName;
-      const rotationPeriod = data.rotation;
+    const data = await fetchPlanetInfo(planetId);
+    console.log(data);
 
-      // Display the data on the webpage or perform additional actions
-      const planetInfo = `Planet: ${planetName}
-        Latin Name: ${latinName}
-        Rotation Period: ${rotationPeriod} hours`;
+    // Process the returned data
+    const planetName = data.name;
+    const latinName = data.latinName;
+    const rotationPeriod = data.rotation;
 
-      console.log(planetInfo);
-    })
-    .catch(error => {
-      console.error(error);
-    });
+    // Update the HTML content with the planet information
+    const planetInfo = `
+      <h3>Planet: ${planetName}</h3>
+      <p>Latin Name: ${latinName}</p>
+      <p>Rotation Period: ${rotationPeriod} hours</p>
+    `;
+    planetInfoElement.innerHTML = planetInfo;
+
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 function fetchPlanetInfo(planetId) {
-  const apiUrl = `https://n5n3eiyjb0.execute-api.eu-north-1.amazonaws.com/bodies/${planetId}`;
+  const apiUrl = `https://n5n3eiyjb0.execute-api.eu-north-1.amazonaws.com/bodies/${id}`;
 
-  return fetch(apiUrl)
+  return fetch(apiUrl, {
+      headers: {
+        'x-zocom': 'solaris-B2mWxADrthdHqd22'
+      }
+    })
     .then(response => {
       if (!response.ok) {
         throw new Error('Failed to fetch planet info');
