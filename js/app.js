@@ -1,63 +1,59 @@
-// Hämtar och returnerar en API-nyckel för vidare API-anrop
 async function getAPIKey() {
-  try {
-     // Gör en POST-förfrågan för att hämta API-nyckeln
-    const response = await fetch('https://n5n3eiyjb0.execute-api.eu-north-1.amazonaws.com/keys', {
-      method: "POST"
-    });
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    const data = await response.json();
-    console.log(data);
-       // Returnerar API-nyckeln från datan
-    return data.key;
-  } catch (error) {
-    throw new Error('Error fetching API key: ' + error);
-  }
+  // Gör en POST-förfrågan för att hämta API-nyckeln
+  const response = await fetch('https://n5n3eiyjb0.execute-api.eu-north-1.amazonaws.com/keys', {
+    method: "POST"
+  });
+  if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+  const data = await response.json();
+  console.log(data);
+  // Returnerar API-nyckeln från datan
+  return data.key;
 }
+
 // Hämtar planetdata
-async function fetchPlanetData() {
-  try {
-     // Hämtar API-nyckeln
-    const key = await getAPIKey();
-    if (!key) throw new Error('No API key retrieved');
-  // Gör ett anrop för att hämta planetdata
-    const response = await fetch("https://n5n3eiyjb0.execute-api.eu-north-1.amazonaws.com/bodies", {
-      headers: { "x-zocom": `${key}` }
-    });
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    const data = await response.json();
-    console.log(data.bodies);
-    return data.bodies; 
-  } catch (error) {
-    console.error("Error fetching planet data:", error);
+async function fetchPlanets() {
+  // Hämtar API-nyckeln
+  const key = await getAPIKey();
+  if (!key) {
+    console.log('No API key retrieved');
   }
+  const response = await fetch("https://n5n3eiyjb0.execute-api.eu-north-1.amazonaws.com/bodies", {
+    headers: { "x-zocom": `${key}` }
+  });
+  if (!response.ok) {
+    console.log(`HTTP error! status: ${response.status}`);
+  }
+  const data = await response.json();
+  console.log(data.bodies);
+  return data.bodies; 
 }
+
 // Hämtar planetdata och ställer in händelsehantering
-async function fetchPlanetDataAndSetup() {
+async function setup() {
    // Hämtar planetdata
-  const planetData = await fetchPlanetData();
+  const planetData = await fetchPlanets();
   // Om planetdata finns, ställ in klickhändelser och modalfönsterhändelser
   if (planetData) {
-    setupClickEvents(planetData);
-    setupModalCloseEvents();
+    setupClicks(planetData);
+    setupModal();
   }
 }
 // Eventlistener som väntar tills DOM är helt laddad
 document.addEventListener('DOMContentLoaded', () => {
 
-  fetchPlanetDataAndSetup();
+  setup();
 });
 
 // Ställer in klickhändelser för varje planet-element
 
-function setupClickEvents(planetsData) {
+function setupClicks(planetsData) {
    // Lägger till en klickhändelse som visar planetinformation
   document.querySelectorAll('.planet').forEach(planetElement => {
-    planetElement.addEventListener('click', () => displayPlanetInfo(planetsData, planetElement.id));
+    planetElement.addEventListener('click', () => showInfo(planetsData, planetElement.id));
   });
 }
 // Visar detaljerad information om en planet när en planet-element klickas
-function displayPlanetInfo(planetsData, planetId) {
+function showInfo (planetsData, planetId) {
   const planet = planetsData.find(p => p.name.toLowerCase() === planetId);
   if (!planet) return;
 
@@ -92,7 +88,7 @@ function displayPlanetInfo(planetsData, planetId) {
 }
 
 // Ställer in händelser för att stänga modalfönstret
-function setupModalCloseEvents() {
+function setupModal() {
   const modal = document.getElementById('planetModal');
   document.querySelector('.close').addEventListener('click', () => {
     modal.style.display = "none";
