@@ -67,7 +67,7 @@ function showInfo (planetsData, planetId) {
     <div class=footer >
     <p class="circumference underborder">CIRCUMFERENCE<br><span>${planet.circumference}</span></p>
     <p class="day-temperature underborder">MAX TEMPERATURE (Day)<br> <span>${planet.temp.day}°C</span></p>
-    <p class="rotation ">MÅNAR<br> <span>${planet.moons.toString().split(",").join(", ")} </span></p>
+    <p class="month ">MÅNAR<br> <span>${planet.moons.join(", ")} </span></p>
     </div>
     
     <div class="distance-from-sun">

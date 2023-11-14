@@ -161,7 +161,9 @@ aside{
   }
 
  
-
+  .month{
+    grid-column: auto/span 2;
+}
 
   .planet-info h3 {
     margin: 0; 
