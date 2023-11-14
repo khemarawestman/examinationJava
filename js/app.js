@@ -59,32 +59,28 @@ function showInfo (planetsData, planetId) {
 
   const planetInfoHtml =
   `
-  <div class="planet-info">
   <div class = containinfo>
     <h3> ${planet.name}</h3>
     <p class="latin-name">${planet.latinName}</p>
     <p class="description"> ${planet.desc}</p>
   </div>
-  <div class="planetinfo">
-  
-  </div>
     <div class=footer >
-    <p class="circumference">CIRCUMFERENCE<br>${planet.circumference}</p>
-    <p class="rotation">Rotation Period<br> ${planet.rotation}</p>
-    <p class="day-temperature">MAX TEMPERATURE (Day)<br> ${planet.temp.day}°C</p>
-    
+    <p class="circumference underborder">CIRCUMFERENCE<br><span>${planet.circumference}</span></p>
+    <p class="day-temperature underborder">MAX TEMPERATURE (Day)<br> <span>${planet.temp.day}°C</span></p>
+    <p class="rotation ">MÅNAR<br> <span>${planet.moons.toString().split(",").join(", ")} </span></p>
     </div>
+    
     <div class="distance-from-sun">
    
-    <p class="distance">DISTANCE FROM THE SUN <br> ${planet.distance} KM</p>
-    <p class="night-temperature">MAX TEMPERATURE (Night)<br> ${planet.temp.night}°C</p>
+    <p class="distance underborder">DISTANCE FROM THE SUN <br> <span>${planet.distance} KM</span></p>
+    <p class="night-temperature underborder">MAX TEMPERATURE (Night)<br> <span> ${planet.temp.night}°C </span></p>
    
   </div>
 
-  </div>`;
+  `;
   const planetInfoElement = document.getElementById('planet-info');
   planetInfoElement.innerHTML = planetInfoHtml;
-  document.getElementById('planetModal').style.display = 'block';
+  document.getElementById('planetModal').style.display = 'flex';
 }
 
 // Ställer in händelser för att stänga modalfönstret
@@ -95,7 +91,7 @@ function setupModal() {
   });
   window.addEventListener('click', (event) => {
     if (event.target === modal) {
-      modal.style.display = "none";
+      modal.style.display = "flex";
     }
   });
 }
